@@ -6,14 +6,11 @@
 #define TAM 10
 #define NAVIO 3
 int main() {
-    // Nível Novato - Posicionamento dos Navios
+    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
     int tabuleiro[TAM][TAM];
-    int navioH[NAVIO] = {3,3,3}; // horizontal
-    int navioV[NAVIO] = {3,3,3}; // vertical
-
     int i, j;
 
-    /* ===== Inicializar tabuleiro com 0 ===== */
+    /* ===== Inicializar tabuleiro ===== */
     for(i = 0; i < TAM; i++) {
         for(j = 0; j < TAM; j++) {
             tabuleiro[i][j] = 0;
@@ -21,20 +18,44 @@ int main() {
     }
 
     /* ===== Coordenadas iniciais ===== */
-    int linhaH = 2, colunaH = 1; // horizontal
-    int linhaV = 5, colunaV = 6; // vertical
+    int l1 = 1, c1 = 1; // horizontal
+    int l2 = 5, c2 = 2; // vertical
+    int l3 = 0, c3 = 6; // diagonal principal (\)
+    int l4 = 2, c4 = 9; // diagonal secundária (/)
 
-    /* ===== Posicionar navio horizontal ===== */
-    for(i = 0; i < NAVIO; i++) {
-        tabuleiro[linhaH][colunaH + i] = navioH[i];
+    /* ===== Navio Horizontal ===== */
+    if(c1 + NAVIO <= TAM) {
+        for(i = 0; i < NAVIO; i++) {
+            if(tabuleiro[l1][c1 + i] == 0)
+                tabuleiro[l1][c1 + i] = 3;
+        }
     }
 
-    /* ===== Posicionar navio vertical ===== */
-    for(i = 0; i < NAVIO; i++) {
-        tabuleiro[linhaV + i][colunaV] = navioV[i];
+    /* ===== Navio Vertical ===== */
+    if(l2 + NAVIO <= TAM) {
+        for(i = 0; i < NAVIO; i++) {
+            if(tabuleiro[l2 + i][c2] == 0)
+                tabuleiro[l2 + i][c2] = 3;
+        }
     }
 
-    /* ===== Exibir tabuleiro ===== */
+    /* ===== Navio Diagonal Principal (\) ===== */
+    if(l3 + NAVIO <= TAM && c3 + NAVIO <= TAM) {
+        for(i = 0; i < NAVIO; i++) {
+            if(tabuleiro[l3 + i][c3 + i] == 0)
+                tabuleiro[l3 + i][c3 + i] = 3;
+        }
+    }
+
+    /* ===== Navio Diagonal Secundária (/) ===== */
+    if(l4 + NAVIO <= TAM && c4 - NAVIO + 1 >= 0) {
+        for(i = 0; i < NAVIO; i++) {
+            if(tabuleiro[l4 + i][c4 - i] == 0)
+                tabuleiro[l4 + i][c4 - i] = 3;
+        }
+    }
+
+    /* ===== Exibir Tabuleiro ===== */
     printf("Tabuleiro:\n\n");
 
     for(i = 0; i < TAM; i++) {
@@ -44,10 +65,6 @@ int main() {
         printf("\n");
     }
 
-    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
-    // Sugestão: Expanda o tabuleiro para uma matriz 10x10.
-    // Sugestão: Posicione quatro navios no tabuleiro, incluindo dois na diagonal.
-    // Sugestão: Exiba o tabuleiro completo no console, mostrando 0 para posições vazias e 3 para posições ocupadas.
 
     // Nível Mestre - Habilidades Especiais com Matrizes
     // Sugestão: Crie matrizes para representar habilidades especiais como cone, cruz, e octaedro.
