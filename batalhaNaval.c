@@ -1,91 +1,106 @@
 #include <stdio.h>
 
-// Desafio Batalha Naval - MateCheck
-// Este código inicial serve como base para o desenvolvimento do sistema de Batalha Naval.
-// Siga os comentários para implementar cada parte do desafio.
 #define TAM 10
-#define NAVIO 3
+#define H 5   // tamanho da matriz de habilidade
+
 int main() {
-    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
-    int tabuleiro[TAM][TAM];
+
+    int tab[TAM][TAM];
+    int cone[H][H], cruz[H][H], oct[H][H];
+
     int i, j;
 
     /* ===== Inicializar tabuleiro ===== */
-    for(i = 0; i < TAM; i++) {
-        for(j = 0; j < TAM; j++) {
-            tabuleiro[i][j] = 0;
+    for(i = 0; i < TAM; i++)
+        for(j = 0; j < TAM; j++)
+            tab[i][j] = 0;
+
+    /* ===== Criar CONE (aponta para baixo) ===== */
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < H; j++) {
+            if(j >= (H/2 - i) && j <= (H/2 + i))
+                cone[i][j] = 1;
+            else
+                cone[i][j] = 0;
         }
     }
 
-    /* ===== Coordenadas iniciais ===== */
-    int l1 = 1, c1 = 1; // horizontal
-    int l2 = 5, c2 = 2; // vertical
-    int l3 = 0, c3 = 6; // diagonal principal (\)
-    int l4 = 2, c4 = 9; // diagonal secundária (/)
-
-    /* ===== Navio Horizontal ===== */
-    if(c1 + NAVIO <= TAM) {
-        for(i = 0; i < NAVIO; i++) {
-            if(tabuleiro[l1][c1 + i] == 0)
-                tabuleiro[l1][c1 + i] = 3;
+    /* ===== Criar CRUZ ===== */
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < H; j++) {
+            if(i == H/2 || j == H/2)
+                cruz[i][j] = 1;
+            else
+                cruz[i][j] = 0;
         }
     }
 
-    /* ===== Navio Vertical ===== */
-    if(l2 + NAVIO <= TAM) {
-        for(i = 0; i < NAVIO; i++) {
-            if(tabuleiro[l2 + i][c2] == 0)
-                tabuleiro[l2 + i][c2] = 3;
+    /* ===== Criar OCTAEDRO (losango) ===== */
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < H; j++) {
+            if(abs(i - H/2) + abs(j - H/2) <= H/2)
+                oct[i][j] = 1;
+            else
+                oct[i][j] = 0;
         }
     }
 
-    /* ===== Navio Diagonal Principal (\) ===== */
-    if(l3 + NAVIO <= TAM && c3 + NAVIO <= TAM) {
-        for(i = 0; i < NAVIO; i++) {
-            if(tabuleiro[l3 + i][c3 + i] == 0)
-                tabuleiro[l3 + i][c3 + i] = 3;
+    /* ===== Posições no tabuleiro ===== */
+    int lc = 2, cc = 2; // cone
+    int lcr = 5, ccr = 5; // cruz
+    int lo = 7, co = 2; // octaedro
+
+    /* ===== Aplicar CONE ===== */
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < H; j++) {
+
+            int x = lc + i - H/2;
+            int y = cc + j - H/2;
+
+            if(x >= 0 && x < TAM && y >= 0 && y < TAM) {
+                if(cone[i][j] == 1 && tab[x][y] == 0)
+                    tab[x][y] = 5;
+            }
         }
     }
 
-    /* ===== Navio Diagonal Secundária (/) ===== */
-    if(l4 + NAVIO <= TAM && c4 - NAVIO + 1 >= 0) {
-        for(i = 0; i < NAVIO; i++) {
-            if(tabuleiro[l4 + i][c4 - i] == 0)
-                tabuleiro[l4 + i][c4 - i] = 3;
+    /* ===== Aplicar CRUZ ===== */
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < H; j++) {
+
+            int x = lcr + i - H/2;
+            int y = ccr + j - H/2;
+
+            if(x >= 0 && x < TAM && y >= 0 && y < TAM) {
+                if(cruz[i][j] == 1 && tab[x][y] == 0)
+                    tab[x][y] = 5;
+            }
+        }
+    }
+
+    /* ===== Aplicar OCTAEDRO ===== */
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < H; j++) {
+
+            int x = lo + i - H/2;
+            int y = co + j - H/2;
+
+            if(x >= 0 && x < TAM && y >= 0 && y < TAM) {
+                if(oct[i][j] == 1 && tab[x][y] == 0)
+                    tab[x][y] = 5;
+            }
         }
     }
 
     /* ===== Exibir Tabuleiro ===== */
-    printf("Tabuleiro:\n\n");
+    printf("Tabuleiro com habilidades:\n\n");
 
     for(i = 0; i < TAM; i++) {
         for(j = 0; j < TAM; j++) {
-            printf("%d ", tabuleiro[i][j]);
+            printf("%d ", tab[i][j]);
         }
         printf("\n");
     }
-
-
-    // Nível Mestre - Habilidades Especiais com Matrizes
-    // Sugestão: Crie matrizes para representar habilidades especiais como cone, cruz, e octaedro.
-    // Sugestão: Utilize estruturas de repetição aninhadas para preencher as áreas afetadas por essas habilidades no tabuleiro.
-    // Sugestão: Exiba o tabuleiro com as áreas afetadas, utilizando 0 para áreas não afetadas e 1 para áreas atingidas.
-
-    // Exemplos de exibição das habilidades:
-    // Exemplo para habilidade em cone:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 1 1 1 1 1
-    
-    // Exemplo para habilidade em octaedro:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 0 0 1 0 0
-
-    // Exemplo para habilidade em cruz:
-    // 0 0 1 0 0
-    // 1 1 1 1 1
-    // 0 0 1 0 0
 
     return 0;
 }
